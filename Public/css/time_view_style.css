@@ -1,0 +1,46 @@
+
+time-view {
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+    overflow: hidden;
+    font-size: 10px;
+}
+
+
+time-view .event{
+    fill: red;
+    opacity: .5;
+    stroke-width: 2px;
+    stroke: steelblue;
+}
+
+time-view .event:hover {
+    stroke: darkorange;
+    stroke-width: 4px;
+}
+
+
+time-view .tree .sport{
+    fill: none;
+    stroke-width: 1px;
+    stroke: steelblue;
+}
+
+time-view .tree .discipline{
+    fill: none;
+    stroke-width: 1px;
+    stroke: steelblue;
+}
+
+time-view .tree .event{
+    fill: none;
+    stroke-width: 1px;
+    stroke: steelblue;
+}
+
+time-view .tree text {
+    text-anchor: end;
+    dominant-baseline: central;
+}

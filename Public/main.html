@@ -1,0 +1,26 @@
+<!--
+    last designed 2016/09/02
+    for analysis
+-->
+<html>
+<head>
+    <title>Olympic Vis</title>
+    <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-route.min.js"></script>
+    <script src="lib/d3.v4.js" charset="utf-8"></script>
+    <script src="js/MainCtrl.js"></script>
+    <script src="js/timeView.js"></script>
+    <link rel="stylesheet" type="text/css" href="CSS/global.css">
+    <link rel="stylesheet" type="text/css" href="CSS/time_view_style.css">
+</head>
+
+<body ng-app="myApp" ng-controller="MainCtrl">
+    <!-- motion view -->
+    <div style="float:left;width:100%;height:99%;overflow:auto;margin:2px">
+        <time-view style="float:left;overflow:auto" data="olympic"></time-view>
+    </div>
+
+</body>
+</html>
+
+
