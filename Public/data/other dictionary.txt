@@ -1,0 +1,9 @@
+
+Soviet Union,URS,0,0
+East Germany,GDR,0,0
+Czechoslovakia,TCH,0,0
+Western Germany,FRG,0,0
+,EUA,0,0
+,ROU,0,0
+,YUG,0,0
+,EUN,0,0

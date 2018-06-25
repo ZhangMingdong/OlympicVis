@@ -9,12 +9,13 @@ time-view {
 }
 
 
-time-view .event{
+time-view .timeline .event{
     fill: red;
     opacity: .5;
     stroke-width: 2px;
     stroke: steelblue;
 }
+
 
 time-view .event:hover {
     stroke: darkorange;
@@ -22,20 +23,22 @@ time-view .event:hover {
 }
 
 
+
+
 time-view .tree .sport{
-    fill: none;
+    fill: lightyellow;
     stroke-width: 1px;
     stroke: steelblue;
 }
 
 time-view .tree .discipline{
-    fill: none;
+    fill: lightyellow;
     stroke-width: 1px;
     stroke: steelblue;
 }
 
 time-view .tree .event{
-    fill: none;
+    fill: lightyellow;
     stroke-width: 1px;
     stroke: steelblue;
 }
@@ -43,4 +46,27 @@ time-view .tree .event{
 time-view .tree text {
     text-anchor: end;
     dominant-baseline: central;
+}
+
+
+time-view .eventline{
+    fill: none;
+    stroke-width: 1px;
+    stroke: steelblue;
+}
+
+
+time-view .tree .sport:hover {
+    stroke: darkorange;
+    stroke-width: 4px;
+}
+
+time-view .tree .discipline:hover {
+    stroke: darkorange;
+    stroke-width: 4px;
+}
+
+time-view .tree .event:hover {
+    stroke: darkorange;
+    stroke-width: 4px;
 }

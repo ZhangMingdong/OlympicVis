@@ -32,6 +32,7 @@ mainApp.directive('timeView', function () {
             // 1.Add DOM elements
             var svgBG = d3.select(el[0]).append("svg").attr("width",svgBGW).attr("height",svgBGH);
             var svgTimeline=svgBG.append("g")
+                .classed('timeline',true)
                 .attr("transform", "translate(" + (margin.left+svgTreeW) + "," + margin.top + ")");
             var svgTree=svgBG.append("g")
                 .classed('tree',true)
@@ -154,12 +155,13 @@ mainApp.directive('timeView', function () {
                     .attr("transform", "translate(0," + svgTimelineH + ")")
                     .call(d3.axisBottom(xScale))
 
+                /*
                 gAxisY
                     .attr("transform", "translate(-2,0)")
                     .call(d3.axisLeft(yScale).tickFormat(function(d){
                         return "";
                     }));
-
+                */
 
 
 
@@ -257,14 +259,15 @@ mainApp.directive('timeView', function () {
                         event
                             .attr("x",  function(d) {return col1+col2;})
                             .attr("y", function(d) {return yScale(getEvent(d));})
-                            .attr("width", col3+svgTimelineW)
+                            .attr("width", col3
+                            //    +svgTimelineW
+                            )
                             .attr("height", yScale.bandwidth())
                     }
                     _setEvent(svgEvents
                         .enter().append("rect")
                         .attr("class", "event"))
                     _setEvent(svgEvents)
-
 
                     svgEvents.exit().remove();
 
@@ -282,6 +285,23 @@ mainApp.directive('timeView', function () {
 
                     _setText(svtText)
                     svtText.exit().remove();
+
+
+                    // events in timeline
+                    var svgEventLines=svgTree.selectAll(".eventline").data(data_tree_events);
+                    function _setEventLine(event){
+                        event
+                            .attr("x",  function(d) {return col1+col2+col3;})
+                            .attr("y", function(d) {return yScale(getEvent(d));})
+                            .attr("width", svgTimelineW)
+                            .attr("height", yScale.bandwidth())
+                    }
+                    _setEventLine(svgEventLines
+                        .enter().append("rect")
+                        .attr("class", "eventline"))
+                    _setEventLine(svgEventLines)
+
+                    svgEvents.exit().remove();
                 }
 
                 redrawEvents();
