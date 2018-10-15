@@ -8,3 +8,9 @@ athletes-view {
     font-size: 10px;
 }
 
+
+
+athletes-view rect:hover {
+    stroke: blue;
+    stroke-width: 2px;
+}

@@ -48,6 +48,8 @@ mainApp.directive('timeView', function () {
                 svgBGW = el[0].clientWidth;
                 svgBGH = el[0].clientHeight;
             //    svgBGH=2000
+                //if(svgBGH<8000) svgBGH=8000
+                //if(svgBGH<1000) svgBGH=1000
 
                 return svgBGW + svgBGH;
             }, resize);
@@ -64,14 +66,17 @@ mainApp.directive('timeView', function () {
             }
             function redraw(){
                 //console.log("redraw motion chart");
-
+                // sports data
                 var sports=scope.data.sports;
+
+                // sports data of the tree
                 var data_sports=[]
+                // discipline data of the tree
                 var data_disciplines=[]
-
-                var data_tree_events=[]
-
-                var data_events=scope.data.events;
+                // event data of the tree
+                var data_events=[]
+                // cell data of the time line
+                var data_cells=[];//scope.data.events;
 
                 // build data for sports and disciplines
                 sports.forEach(function(sport){
@@ -79,10 +84,20 @@ mainApp.directive('timeView', function () {
                     var event1=0;
                     sport.Disciplines.forEach(function(discipline){
                         discipline.Events.forEach(function(event){
-                            data_tree_events.push({
+                            data_events.push({
                                 Sport:sport.Sport
                                 ,Discipline:discipline.Discipline
                                 ,Event:event.Event
+                            })
+
+                            event.Years.forEach(function(year){
+                                data_cells.push({
+                                    Year:year.Year
+                                    ,Gender:year.Gender
+                                    ,Sport:sport.Sport
+                                    ,Discipline:discipline.Discipline
+                                    ,Event:event.Event
+                                })
                             })
                         })
                         var event_last=discipline.Events[discipline.Events.length-1]
@@ -128,12 +143,12 @@ mainApp.directive('timeView', function () {
 
 
                 var yScale = d3.scaleBand()
-                    .domain(data_events.map(function(d) { return showDisciplines? getDiscipline(d): getEvent(d); }))
+                    .domain(data_cells.map(function(d) { return showDisciplines? getDiscipline(d): getEvent(d); }))
                     .range([0,svgTimelineH])
 
                 var mapYear={};
                 var years=[];
-                data_events.forEach(function(d){
+                data_cells.forEach(function(d){
                     if(!mapYear[d.Year]){
                         mapYear[d.Year]=1;
                         years.push(d.Year);
@@ -169,7 +184,7 @@ mainApp.directive('timeView', function () {
                 function redrawTimeline(){
                     // add codes to draw
                     // append the rectangles for the background
-                    var svgEvents=svgTimeline.selectAll(".event").data(data_events);
+                    var svgEvents=svgTimeline.selectAll(".event").data(data_cells);
                     function _setEvent(event){
                         event
                             .attr("x",  function(d) {return xScale(d.Year);})
@@ -254,7 +269,7 @@ mainApp.directive('timeView', function () {
                     svtText.exit().remove();
                 }
                 function redrawEvents(){
-                    var svgEvents=svgTree.selectAll(".event").data(data_tree_events);
+                    var svgEvents=svgTree.selectAll(".event").data(data_events);
                     function _setEvent(event){
                         event
                             .attr("x",  function(d) {return col1+col2;})
@@ -272,7 +287,7 @@ mainApp.directive('timeView', function () {
                     svgEvents.exit().remove();
 
 
-                    var svtText=svgTree.selectAll(".eventText").data(data_tree_events);
+                    var svtText=svgTree.selectAll(".eventText").data(data_events);
                     function _setText(text){
                         text
                             .text(function(d) { return d.Event; })
@@ -288,7 +303,7 @@ mainApp.directive('timeView', function () {
 
 
                     // events in timeline
-                    var svgEventLines=svgTree.selectAll(".eventline").data(data_tree_events);
+                    var svgEventLines=svgTree.selectAll(".eventline").data(data_events);
                     function _setEventLine(event){
                         event
                             .attr("x",  function(d) {return col1+col2+col3;})
@@ -317,7 +332,7 @@ mainApp.directive('timeView', function () {
 
             scope.$watch('data', redraw);
             scope.$watch('data.raw', redraw);
-            scope.$watch('data.events', redraw);
+            scope.$watch('data.sports', redraw);
         }
         timeView();
     }

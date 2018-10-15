@@ -1,0 +1,38 @@
+<!--
+    OlympicVis
+    2018/06
+-->
+<html>
+<head>
+    <title>Olympic Vis</title>
+    <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-route.min.js"></script>
+    <script src="lib/d3.v4.js" charset="utf-8"></script>
+    <script src="js/MainCtrl.js"></script>
+    <script src="js/my_stack.js"></script>
+    <script src="js/streamView.js"></script>
+    <link rel="stylesheet" type="text/css" href="CSS/global.css">
+    <link rel="stylesheet" type="text/css" href="CSS/stream_view_style.css">
+</head>
+
+<body ng-app="myApp" ng-controller="MainCtrl">
+<!-- stream view -->
+<div style="float:left;width:100%;height:90%;overflow:auto;margin:2px">
+    <stream-view style="float:left;overflow:auto" data="olympic" setting="streamSetting"></stream-view>
+</div>
+<div style="float:left;width:100%;height:9%;overflow:auto;margin:2px">
+
+    <!-- controls -->
+    <fieldset style="float:left;width:40%;overflow:auto;margin:2px">
+        <legend><b>Select Bout</b></legend>
+        <select ng-model="selectedDataset" ng-options="dataset for dataset in datasetList" style="width:100%"></select>
+    </fieldset>
+    <fieldset style="float:left;width:40%;overflow:auto;margin:2px">
+        <legend><b>Select Base</b></legend>
+        <select ng-model="streamSetting.selectedBase" ng-options="base for base in streamSetting.baseList" style="width:100%"></select>
+    </fieldset>
+</div>
+</body>
+</html>
+
+

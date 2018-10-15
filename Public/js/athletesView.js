@@ -10,7 +10,7 @@ mainApp.directive('athletesView', function () {
     function link(scope, el, attr) {
         function athletesView(){
             // 0.definition
-            var showDisciplines=false;   // false means show events
+            var length_threshold=51;
 
             // 0.1.size
             var margin = {top: 40, right: 40, bottom: 200, left: 30};
@@ -104,7 +104,7 @@ mainApp.directive('athletesView', function () {
                         return b.gold+b.silver+b.bronze-a.gold-a.silver-a.bronze;
                     })
                 }
-                if(data.length>50) data=data.slice(0,50);
+                if(data.length>length_threshold) data=data.slice(0,length_threshold);
 
                 var xScale = d3.scaleBand()
                     .rangeRound([0, svgW])

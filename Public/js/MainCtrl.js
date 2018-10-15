@@ -1,29 +1,87 @@
+/*
+    control of olympicVis
+    created in june, 2018
+    by Mingdong
+ */
 var mainApp = angular.module("myApp", ['ngRoute']);
 
 mainApp.controller('MainCtrl', function ($scope, $http,$window) {
     angular.element($window).on('resize', function () { $scope.$apply() })
 
+    // dataset list
+    $scope.datasetList=["Summer Olympic","Winter Olympic"];
 
+    // selected match
+    $scope.selectedDataset="Winter Olympic";
+    //$scope.selectedDataset="Summer Olympic";
+
+    $scope.streamSetting={
+        baseList:["Horizontal","Symmetric"]
+        ,selectedBase:"Horizontal"//"Symmetric"
+    }
+
+
+    //var olympic_file="../data/winter.csv";
+    var olympic_file="../data/summer_cleaned.csv";
+    var dictionary_file="../data/dictionary.csv"
+
+    // the olympic data
     $scope.olympic={
-        raw:[]
+        raw:[]                  // raw data list
         ,events:[]              // list of events
         ,sports:[]              // list of the sports, roots of the forests
         ,athletes:[]             // list of athletes and their medals
         ,countries:[]           // list of countries and thier medals
         ,scope:0                // show 0-athlete or 1-country
         ,rank:0                // rank by 0-gold or 1-medal
-
-
-
     }
 
+    // read data from csv file
     function readOlympicData(){
         // build events data from raw data
         function buildEvents(raw){
-            var events=[];
-            var mapSports={}
+            /*
+                Sports:[
+                    {
+                        Sport:
+                        Disciplines:
+                        mapDiscipline:{}
+                    }
+                ...
+                ]
+
+                Disciplines:[
+                    {
+                        Sport:
+                        Discipline:
+                        Events:
+                        mapEvents:{}
+                    }
+                ...
+                ]
+
+                Events:[
+                    {
+                        Sport:
+                        Discipline:
+                        Years:
+                        mapYears:{}
+                    }
+                ...
+                ]
+
+                Years:[
+                    {
+                        Year:
+                        Gender:
+                    }
+                ...
+                ]
+             */
             var sports=[];
 
+            // map of the sport names to the data of each sport
+            var mapSports={}
             // 1.check the raw data
             raw.forEach(function(d){
                 // 1.functions
@@ -81,7 +139,8 @@ mainApp.controller('MainCtrl', function ($scope, $http,$window) {
                 }
 
                 // 2.check layer by layer
-                if(!mapSports[d.Sport]) {
+                if(!mapSports[d.Sport]) // check sport
+                {
                     var newEvent=_createNewEvent(d);
 
                     var newDiscipline=_createNewDiscipline(d)
@@ -90,7 +149,8 @@ mainApp.controller('MainCtrl', function ($scope, $http,$window) {
                     var newSport=_createNewSport(d)
                     _addDiscipline(newSport,newDiscipline);
                 }
-                else if(!mapSports[d.Sport].mapDiscipline[d.Discipline]){
+                else if(!mapSports[d.Sport].mapDiscipline[d.Discipline]) // check discipline
+                {
                     var newEvent=_createNewEvent(d);
 
                     var newDiscipline=_createNewDiscipline(d)
@@ -98,36 +158,20 @@ mainApp.controller('MainCtrl', function ($scope, $http,$window) {
 
                     _addDiscipline(mapSports[d.Sport],newDiscipline)
                 }
-                else if(!mapSports[d.Sport].mapDiscipline[d.Discipline].mapEvents[d.Event]){
+                else if(!mapSports[d.Sport].mapDiscipline[d.Discipline].mapEvents[d.Event])// check event
+                {
                     var newEvent=_createNewEvent(d);
                     _addEvent(mapSports[d.Sport].mapDiscipline[d.Discipline],newEvent);
                 }
-                else {
+                else // just add
+                {
                     _addYear(mapSports[d.Sport].mapDiscipline[d.Discipline].mapEvents[d.Event],d.Year,d.Gender);
                 }
 
             })
 
-            // 2.create events lists
-            sports.forEach(function(sport){
-                sport.Disciplines.forEach(function(discipline){
-                    discipline.Events.forEach(function(event){
-                        event.Years.forEach(function(year){
-                            events.push({
-                                Year:year.Year
-                                ,Gender:year.Gender
-                                ,Sport:sport.Sport
-                                ,Discipline:discipline.Discipline
-                                ,Event:event.Event
-                            })
-                        })
-
-                    })
-                })
-            })
-
-            $scope.olympic.events=events;
             $scope.olympic.sports=sports;
+            console.log($scope.olympic.sports);
 
         }
 
@@ -221,10 +265,11 @@ mainApp.controller('MainCtrl', function ($scope, $http,$window) {
 
         }
 
-
+        // map of code to country
         var mapDic={};
-        var olympic_file="../data/winter.csv";
-        var dictionary_file="../data/dictionary.csv"
+
+
+        // temporary structure, just used for build the map of country codes
         var dic=[];
         d3.csv(dictionary_file, function(d) {
             dic.push(d)
@@ -233,8 +278,12 @@ mainApp.controller('MainCtrl', function ($scope, $http,$window) {
                 mapDic[d.Code]=d.Country;
             })
 
+            // store the raw data
             var raw=[];
             d3.csv(olympic_file, function(d) {
+            //    d.Sport=d.Sport.toLowerCase();
+            //    d.Discipline=d.Discipline.toLowerCase();
+            //    d.Event=d.Event.toLowerCase();
                 raw.push(d)
             }, function(error,hehe) {
                 buildEvents(raw);
@@ -247,7 +296,16 @@ mainApp.controller('MainCtrl', function ($scope, $http,$window) {
         });
 
     }
-    readOlympicData();
 
+
+    $scope.$watch('selectedDataset', function() {
+        if($scope.selectedDataset=="Summer Olympic"){
+            olympic_file="../data/summer_cleaned.csv";
+        }
+        else if($scope.selectedDataset=="Winter Olympic"){
+            olympic_file="../data/winter.csv";
+        }
+        readOlympicData();
+    });
 });
 
